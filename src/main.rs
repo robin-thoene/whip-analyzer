@@ -34,7 +34,7 @@ fn get_cd_rip_results(root_path: &Path) -> Vec<CdResult> {
             if e.file_type().is_file() {
                 if let Some(file_name) = e.file_name().to_str() {
                     if file_name.ends_with(".log") {
-                        log::debug!("found log file {}", file_name);
+                        log::info!("found log file {}", file_name);
                         let cd_result = parse_log_file(e.path());
                         cd_results.push(cd_result);
                     } else {
@@ -56,7 +56,8 @@ fn get_cd_rip_results(root_path: &Path) -> Vec<CdResult> {
             log::error!("error occured while getting directory entry");
         }
     }
-    log::debug!("done, got {} results", cd_results.len());
+    log::debug!("done");
+    log::info!("found {} CD rip results", cd_results.len());
     cd_results
 }
 
@@ -91,6 +92,7 @@ fn parse_log_file(path: &Path) -> CdResult {
         accurate_rip_v2_result: "yo".to_string(),
     };
     log::debug!("done");
+    log::info!("parsed log file {}", path.display());
     CdResult {
         log_file_path: path.display().to_string(),
         track_results: vec![test], // TODO: impl

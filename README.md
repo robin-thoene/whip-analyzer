@@ -5,6 +5,10 @@
 Small CLI application to recursively analyze the outcome of multiple CD rips performed by
 [whipper](https://github.com/whipper-team/whipper).
 
+## Disclaimer
+
+This is a quickly written utility application that suits my own use case, it might not suit yours.
+
 ## Prerequisites
 
 This CLI only works if you ripped you audio CD using `whipper` and kept the automatically

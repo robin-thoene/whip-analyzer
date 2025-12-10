@@ -1,7 +1,3 @@
-//
-// TODO: improve encapsulation
-//
-
 use clap::{self, Parser};
 use std::path::PathBuf;
 

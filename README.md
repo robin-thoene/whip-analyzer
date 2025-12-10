@@ -7,7 +7,8 @@ Small CLI application to recursively analyze the outcome of multiple CD rips per
 
 ## Disclaimer
 
-This is a quickly written utility application that suits my own use case, it might not suit yours.
+This is a quickly written utility application. The code can not be considered well written or being
+stable/tested. Furthermore this program suits only my own use case, it might not suit yours.
 
 ## Prerequisites
 

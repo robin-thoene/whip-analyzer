@@ -4,6 +4,7 @@
 
 use std::fmt::Display;
 
+#[derive(Debug)]
 pub struct CdResult {
     pub artist: Option<String>,
     pub title: Option<String>,
@@ -17,9 +18,9 @@ impl CdResult {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct TrackResult {
-    pub file_name: Option<String>,
+    pub song_name: Option<String>,
     pub quality: Option<String>,
     pub accurate_rip_v1_result: Option<String>,
     pub accurate_rip_v2_result: Option<String>,
@@ -47,7 +48,7 @@ v1: {}
 v2: {}
 status: {}
             ",
-            self.file_name.as_deref().unwrap_or(fallback),
+            self.song_name.as_deref().unwrap_or(fallback),
             self.is_rip_good(),
             self.quality.as_deref().unwrap_or(fallback),
             self.accurate_rip_v1_result.as_deref().unwrap_or(fallback),

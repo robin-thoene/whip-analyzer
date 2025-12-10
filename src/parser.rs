@@ -54,9 +54,10 @@ fn parse_cd_rip_log_file(path: &Path) -> Option<CdResult> {
             // keep track of what to parse at the moment
             let mut mode = LogFileParsingMode::default();
             // create result variables
-            let track_results = vec![];
+            let mut track_results = vec![];
             let mut title: Option<String> = None;
             let mut artist: Option<String> = None;
+            let mut is_new_track = true;
             // create temporary placeholder for building track results based on multiple lines
             let mut tmp_track_result = TrackResult::default();
 
@@ -83,10 +84,35 @@ fn parse_cd_rip_log_file(path: &Path) -> Option<CdResult> {
                                 }
                             }
                             LogFileParsingMode::ReadTracks => {
-                                // TODO: impl
-                            }
-                            LogFileParsingMode::ReadSummary => {
-                                // TODO: impl
+                                if is_new_track {
+                                    is_new_track = false;
+                                    log::debug!("starting to process track number {} now", line);
+                                }
+                                if line.trim().is_empty() {
+                                    track_results.push(tmp_track_result.clone());
+                                    is_new_track = true;
+                                    log::debug!(
+                                        "finished processing track: {:?}",
+                                        tmp_track_result
+                                    );
+                                    continue;
+                                }
+                                if let Some(("Filename", value)) = line.trim().split_once(':') {
+                                    let song_name =
+                                        value.split('-').last().unwrap_or_default().trim();
+                                    tmp_track_result.song_name = Some(song_name.to_string());
+                                }
+                                if let Some(("Extraction quality", value)) =
+                                    line.trim().split_once(':')
+                                {
+                                    tmp_track_result.quality = Some(value.trim().to_string());
+                                }
+                                if let Some(("Status", value)) = line.trim().split_once(':') {
+                                    tmp_track_result.status = Some(value.trim().to_string());
+                                }
+                                if line.contains("Conclusive status report:") {
+                                    mode = LogFileParsingMode::End;
+                                }
                             }
                             LogFileParsingMode::End => {
                                 log::debug!("reached end mode, not reading any furhter lines");
@@ -127,6 +153,5 @@ enum LogFileParsingMode {
     Start,
     ReadCdMetadata,
     ReadTracks,
-    ReadSummary,
     End,
 }

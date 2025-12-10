@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug",
+      "program": "${workspaceFolder}/target/debug/whip-analyzer",
+      "preLaunchTask": "build:whip-analyzer",
+      "args": [
+        "--path",
+        "TODO: insert the path to your collection in here"
+      ]
+    }
+  ]
+}

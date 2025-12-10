@@ -6,5 +6,5 @@ fn main() {
     let args = get_cli_args();
     setup_logger();
     let cd_results = parse_cd_rip_results(&args.path);
-    print_results(cd_results);
+    print_results(cd_results, args.only_errors);
 }

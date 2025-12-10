@@ -89,7 +89,11 @@ fn parse_cd_rip_log_file(path: &Path) -> Option<CdResult> {
                                     log::debug!("starting to process track number {} now", line);
                                 }
                                 if line.trim().is_empty() {
+                                    // save the track
                                     track_results.push(tmp_track_result.clone());
+                                    // ensure the tmp var is reset
+                                    tmp_track_result = TrackResult::default();
+                                    // signal to the parser that the next line is a new track
                                     is_new_track = true;
                                     log::debug!(
                                         "finished processing track: {:?}",
@@ -99,7 +103,7 @@ fn parse_cd_rip_log_file(path: &Path) -> Option<CdResult> {
                                 }
                                 if let Some(("Filename", value)) = line.trim().split_once(':') {
                                     let song_name =
-                                        value.split('-').last().unwrap_or_default().trim();
+                                        value.split('-').next_back().unwrap_or_default().trim();
                                     tmp_track_result.song_name = Some(song_name.to_string());
                                 }
                                 if let Some(("Extraction quality", value)) =
@@ -109,6 +113,9 @@ fn parse_cd_rip_log_file(path: &Path) -> Option<CdResult> {
                                 }
                                 if let Some(("Status", value)) = line.trim().split_once(':') {
                                     tmp_track_result.status = Some(value.trim().to_string());
+                                }
+                                if line.contains("Result: Found, exact match") {
+                                    tmp_track_result.is_accurate_rip = true;
                                 }
                                 if line.contains("Conclusive status report:") {
                                     mode = LogFileParsingMode::End;
